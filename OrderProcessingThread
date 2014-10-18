@@ -1,0 +1,73 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace _445project2
+{
+    class OrderProcessingThread
+    {
+        
+        private Boolean flag;
+        private int totalCharge;
+        private OrderClass order;
+
+        //event caller
+        public delegate void orderConfirmationEvent(OrderClass confirmed, int travelAgencyid);
+
+        //event 
+        public static event orderConfirmationEvent orderConfirmed;
+
+        public OrderProcessingThread(OrderClass or)
+        {
+
+            order = or;
+            if(ccValidity(or.getCNum()))
+            {
+                calculateTotal();
+            }
+
+            else
+            {
+                Console.WriteLine("Credit Card Number {0} ", or.getCNum());
+            }
+        }
+        public Boolean ccValidity(int cc)
+        {
+            //checks to see if credit card is valid or not
+            BankService bankserv = new BankService();
+            flag = bankserv.isccValid(cc);
+
+            //if valid, return true, else returns false
+            return flag;
+        }
+
+        public void calculateTotal()
+        {
+            //total is being calculated
+
+            double tax = 0.5;
+            int locationCharge = 20;
+            int priceperroom = order.getamt() / order.getroom();
+            totalCharge = locationCharge + priceperroom * order.getroom();
+            totalCharge += (int)(tax * totalCharge);
+
+            order.setamt(totalCharge);
+            /*if (orderConfirmed != null)
+            {
+                orderConfirmed(order);
+            }*/
+
+            
+
+            orderConfirmed(order, order.gettID());
+            
+
+
+        }
+
+        
+    }
+
+}
