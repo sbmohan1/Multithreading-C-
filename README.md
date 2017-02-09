@@ -2,4 +2,4 @@ Multithreading-C-
 =================
 CSE 445: Distributed Software Development
 
-Project that showcases Multithreading to simulate 
+Project that showcases Multithreading to simulate Cosnumer/Producer relationship.
